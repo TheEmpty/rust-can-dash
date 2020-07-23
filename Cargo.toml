@@ -8,4 +8,4 @@ edition = "2018"
 
 [dependencies]
 web-view = { version = "0.5.4" }
-rand = "0.7.3"
+rand = "0.7.3" # PoC

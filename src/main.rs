@@ -9,10 +9,10 @@ use rand::Rng;
 
 fn main() {
     let mut can_data: HashMap<&str, String> = HashMap::new();
-
+    let html: String = std::fs::read_to_string("dash.html").unwrap().parse().unwrap();
     let mut view = web_view::builder()
         .title("Rust Can Dash")
-        .content(Content::Html(HTML))
+        .content(Content::Html(html))
         .size(800, 100)
         .resizable(true)
         .debug(true)
@@ -33,13 +33,13 @@ fn main() {
     thread::spawn(move || loop {
         {
             handle.dispatch(move |mut view| {
-                let rand_rpm: u32 = rand::thread_rng().gen_range(0, 50) + 850;
+                let rand_rpm: u32 = rand::thread_rng().gen_range(0, 50) + 850; // PoC
                 let rpm_string = format!("{}", rand_rpm);
                 (*view.user_data_mut()).insert("rpm", rpm_string);
                 render(&mut view)
             });
         }
-        thread::sleep(Duration::from_millis(200));
+        thread::sleep(Duration::from_millis(200)); // PoC
     });
     view.run();
 }
@@ -48,21 +48,3 @@ fn render(view: &mut WebView<HashMap<&str, String>>) -> WVResult {
     let user_data = view.user_data();
     view.eval(&format!("update({:?})", user_data))
 }
-
-const HTML: &str = r#"
-<!doctype html>
-<html>
-    <body>
-        <strong>RPM: <span id="rpm"></span></strong>
-        <br>
-        <button onclick="external.invoke('enter')">enter fullscreen</button>
-        <button onclick="external.invoke('exit')">exit fullscreen</button>
-
-        <script type="text/javascript">
-            function update(data) {
-                document.getElementById('rpm').innerHTML = data.rpm;
-            }
-        </script>
-	</body>
-</html>
-"#;

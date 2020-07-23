@@ -1,0 +1,15 @@
+<!doctype html>
+<html>
+    <body>
+        <strong>RPM: <span id="rpm"></span></strong>
+        <br>
+        <button onclick="external.invoke('enter')">enter fullscreen</button>
+        <button onclick="external.invoke('exit')">exit fullscreen</button>
+
+        <script type="text/javascript">
+            function update(data) {
+                document.getElementById('rpm').innerHTML = data.rpm;
+            }
+        </script>
+	</body>
+</html>
