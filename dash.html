@@ -1,11 +1,27 @@
 <!doctype html>
 <html>
     <body>
-        <strong>RPM: <span id="rpm"></span></strong>
+        <center class="halign">
+            <h1>RPM: <span id="rpm"></span></h1>
+        </center>
+        <h3>Gear: 1</h3>
         <br>
         <button onclick="external.invoke('enter')">enter fullscreen</button>
         <button onclick="external.invoke('exit')">exit fullscreen</button>
 
+        <style>
+            h1 {
+                font-size: 6vw;
+            }
+            .halign {
+                margin: 0;
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                margin-right: -50%;
+                transform: translate(-50%, -50%)
+            }
+        </style>
         <script type="text/javascript">
             function update(data) {
                 document.getElementById('rpm').innerHTML = data.rpm;
