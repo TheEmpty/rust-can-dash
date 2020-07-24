@@ -21,7 +21,7 @@ fn main() {
 }
 
 fn build_web_view(html: String) -> WebView<'static, CanData> {
-    let mut can_data: CanData = HashMap::new();
+    let can_data: CanData = HashMap::new();
     let mut view = web_view::builder()
         .title("Rust Can Dash")
         .content(Content::Html(html))
@@ -40,17 +40,22 @@ fn build_web_view(html: String) -> WebView<'static, CanData> {
         .build()
         .unwrap();
     view.set_fullscreen(true);
-    return view;
+    view
 }
 
 fn update_loop(view: &mut WebView<CanData>) {
     let handle = view.handle();
     thread::spawn(move || loop {
         {
-            handle.dispatch(move |mut view| {
-                let rand_rpm: u32 = rand::thread_rng().gen_range(0, 50) + 850; // PoC
+            handle.dispatch(move |view| {
+                // Mock data for PoC
+                let rand_rpm: u32 = rand::thread_rng().gen_range(0, 50) + 1100;
                 let rpm_string = format!("{}", rand_rpm);
-                (*view.user_data_mut()).insert("rpm", rpm_string);
+                let user_data = &mut *view.user_data_mut();
+                user_data.insert("rpm", rpm_string);
+                user_data.insert("vss", "10".to_string());
+                user_data.insert("gear", "2".to_string());
+                user_data.insert("fuel", "35".to_string());
                 view.eval(&format!("update({:?})", view.user_data()))
             });
         }

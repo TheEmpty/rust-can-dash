@@ -1,18 +1,34 @@
 <!doctype html>
 <html>
     <body ondblclick="switchFullScreen()">
-        <center class="halign">
-            <h1>RPM: <span id="rpm"></span></h1>
-            <h3>Gear: 1</h3>
-        </center>
+        <div id="rpm-bar" class="seg-bar seg-bar-white valign">
+            <span id="rpm">?</span>
+            <small>rpm</small>
+            <span class="seg-fill"></span>
+        </div>
+
+        <div class="valign halign">
+            <!-- TODO: mph/kph looks like user configuration/defined -->
+            <h1><span id="vss">??</span> mph</h1>
+            <h3>Gear: <span id="gear">?</span></h3>
+        </div>
 
         <style>
             body {
                 background: black;
                 color: #cc5500;
             }
+            small {
+                font-size: 2vh;
+            }
             h1 {
                 font-size: 6vw;
+            }
+            #rpm {
+                width: 12vh;
+            }
+            .valign {
+                text-align: center;
             }
             .halign {
                 margin: 0;
@@ -22,10 +38,41 @@
                 margin-right: -50%;
                 transform: translate(-50%, -50%)
             }
+            
+            .seg-bar-white {
+                border: 1px solid white;
+            }
+            .seg-bar-white > .seg-fill {
+                background: white;
+            }
+
+            .seg-bar {
+                height:6vh;
+                position:relative;
+                width: 100%;
+                color: white;
+                font-size: 4.5vh;
+            }
+            .seg-fill {
+                content:'\A';
+                position:absolute;
+                top:0; bottom:0;
+                left:0; 
+                width: 0%;
+                z-index: -9999;
+            }
         </style>
         <script type="text/javascript">
+            var max_val = {rpm: 7500};
+
             function update(data) {
-                document.getElementById('rpm').innerHTML = data.rpm;
+                Object.keys(data).forEach(key => {
+                    document.getElementById(key).innerHTML = data[key];
+                    var bar = document.getElementById(key + "-bar");
+                    if(bar !== null && bar.children.length > 0) {
+                        bar.children[bar.children.length - 1].style.width = (data[key] / max_val[key]) * 100 + "%";
+                    }
+                });
             }
 
             var fullscreen = true;
@@ -38,5 +85,5 @@
                 fullscreen = !fullscreen;
             }
         </script>
-	</body>
+    </body>
 </html>
