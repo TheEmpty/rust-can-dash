@@ -76,6 +76,17 @@
                 width: 0%;
                 z-index: -9999;
             }
+
+            .blinking{
+                animation:blinker .5s step-start infinite;
+            }
+
+            @keyframes blinker {
+                50% {
+                    opacity: .5;
+                }
+            }
+
         </style>
         <script type="text/javascript">
             var ranges;
@@ -92,11 +103,18 @@
                         bar.children[bar.children.length - 1].style.width = (data[key] / ranges[key].max) * 100 + "%";
                         if(ranges[key] !== null) {
                             var this_range = ranges[key];
-                            bar.className = bar.className.replace(" seg-bar-red", "").replace(" seg-bar-yellow", "");
                             if(data[key] >= this_range["danger"]) {
-                                bar.className += " seg-bar-red";
+                                if(bar.className.indexOf("seg-bar-red") == -1) {
+                                    bar.className = bar.className.replace(" seg-bar-yellow", "");
+                                    bar.className += " seg-bar-red blinking";
+                                }
                             } else if(data[key] >= this_range["warning"]) {
-                                bar.className += " seg-bar-yellow";
+                                if(bar.className.indexOf("seg-bar-yellow") == -1) {
+                                    bar.className = bar.className.replace(" seg-bar-red blinking", "");
+                                    bar.className += " seg-bar-yellow";
+                                }
+                            } else {
+                                bar.className = bar.className.replace(" seg-bar-red blinking", "").replace(" seg-bar-yellow", "");
                             }
                         }
                     }
