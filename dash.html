@@ -8,8 +8,15 @@
         </div>
 
         <div class="valign halign">
-            <h1><span id="vss">0</span> <span id="units-vss">mph</span></h1>
+            <h1 id="vss1">0</h1>
+            <span id="units-vss1">mph</span><br />
             <h3>Gear: <span id="gear">1</span></h3>
+            <div>Fuel: <span id="fuel">&nbsp;</span></div>
+            <div>Oil Pressure: <span id="oil_pressure">&nbsp;</span></div>
+            <div>Coolant: <span id="clt">&nbsp;</span></div>
+            <div>MAP: <span id="map">&nbsp;</span></div>
+            <div><label id="launch" data-value="false">Launch</label></div>
+            <div><label id="pit-lane-limitter" data-value="false">Pit</label></div>
         </div>
 
         <style>
@@ -17,12 +24,16 @@
                 background: black;
                 color: #cc5500;
             }
-            small {
-                font-size: 2vh;
+
+            #vss1 {
+                font-size: 30vh;
+                margin: -4vh;
             }
-            h1 {
-                font-size: 6vw;
+
+            #units-vss1 {
+                font-size: 6vh;
             }
+
             #rpm {
                 width: 12vh;
             }
@@ -63,11 +74,10 @@
                 height:6vh;
                 position:relative;
                 width: 100%;
-                color: white;
+                color: green;
                 font-size: 4.5vh;
-                -webkit-text-stroke-width: 1px;
-                -webkit-text-stroke-color: black;
             }
+
             .seg-fill {
                 content:'\A';
                 position:absolute;
@@ -87,6 +97,29 @@
                 }
             }
 
+            label {
+                padding: 4px;
+                color: white;
+                border: 1px solid black;
+            }
+
+            #launch[data-value="false"] {
+                background-color: red;
+            }
+
+            #launch[data-value="true"] {
+                background-color: green;
+            }
+
+            #pit-lane-limitter[data-value="false"] {
+                background-color: grey;
+            }
+
+            #pit-lane-limitter[data-value="true"] {
+                background-color: green;
+                animation: blinker .5s step-start infinite;
+            }
+
         </style>
         <script type="text/javascript">
             var ranges;
@@ -95,7 +128,11 @@
                 Object.keys(data).forEach(key => {
                     var field = document.getElementById(key);
                     if(field !== null) {
-                        field.innerHTML = data[key];
+                        if(field.nodeName == "LABEL") {
+                            field.setAttribute("data-value", data[key]);
+                        } else {
+                            field.innerHTML = data[key];
+                        }
                     }
 
                     var bar = document.getElementById(key + "-bar");

@@ -76,13 +76,21 @@ fn update_loop(source: &WebView<CanData>) {
         {
             let result = handle.dispatch(move |view| {
                 // Mock data for PoC
-                let rpm = rand::thread_rng().gen_range(0, 1000) + 6750;
+                let rpm = rand::thread_rng().gen_range(0, 600) + 4500;
                 let rpm_string = format!("{}", rpm);
+
+                let gear = 2;
+                let gear_string = format!("{}", gear);
+
+                let vss1: i32 = ((1.888 * 4.3 * rpm as f64)/4000 as f64).round() as i32;
+                let vss1_string = format!("{}", vss1);
+
                 let user_data = &mut *view.user_data_mut();
                 user_data.insert("rpm", rpm_string);
-                user_data.insert("vss", "10".to_string());
-                user_data.insert("gear", "2".to_string());
+                user_data.insert("vss1", vss1_string);
+                user_data.insert("gear", gear_string);
                 user_data.insert("fuel", "35".to_string());
+                user_data.insert("launch", "true".to_string());
                 let update_cycle = view.eval(&format!("update({:?})", view.user_data()));
                 if update_cycle.is_err() {
                     let error = update_cycle.unwrap_err();

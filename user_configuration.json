@@ -1,6 +1,11 @@
 {
     "units": {
-        "vss": "mph"
+        "vss1": "mph"
+    },
+
+    "proxies": {
+        "sensors1": "fuel",
+        "sensors2": "oil_pressure"
     },
 
     "ranges": {
@@ -8,6 +13,11 @@
             "warning": 7000,
             "danger": 7500,
             "max": 8500
+        },
+        "fuel": {
+            "max": 100,
+            "min_warning": 10,
+            "min_danger": 5
         }
     }
 }
