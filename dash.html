@@ -2,15 +2,14 @@
 <html>
     <body ondblclick="switchFullScreen()">
         <div id="rpm-bar" class="seg-bar seg-bar-white valign">
-            <span id="rpm">?</span>
+            <span id="rpm">0</span>
             <small>rpm</small>
             <span class="seg-fill"></span>
         </div>
 
         <div class="valign halign">
-            <!-- TODO: mph/kph looks like user configuration/defined -->
-            <h1><span id="vss">??</span> mph</h1>
-            <h3>Gear: <span id="gear">?</span></h3>
+            <h1><span id="vss">0</span> <span id="units-vss">mph</span></h1>
+            <h3>Gear: <span id="gear">1</span></h3>
         </div>
 
         <style>
@@ -46,6 +45,20 @@
                 background: white;
             }
 
+            .seg-bar-yellow {
+                border: 1px solid yellow;
+            }
+            .seg-bar-yellow > .seg-fill {
+                background: yellow;
+            }
+
+            .seg-bar-red {
+                border: 1px solid red;
+            }
+            .seg-bar-red > .seg-fill {
+                background: red;
+            }
+
             .seg-bar {
                 height:6vh;
                 position:relative;
@@ -63,17 +76,31 @@
             }
         </style>
         <script type="text/javascript">
-            var max_val = {rpm: 7500};
+            var ranges;
 
             function update(data) {
                 Object.keys(data).forEach(key => {
-                    document.getElementById(key).innerHTML = data[key];
+                    var field = document.getElementById(key);
+                    if(field !== null) {
+                        field.innerHTML = data[key];
+                    }
+
                     var bar = document.getElementById(key + "-bar");
-                    if(bar !== null && bar.children.length > 0) {
-                        bar.children[bar.children.length - 1].style.width = (data[key] / max_val[key]) * 100 + "%";
+                    if(bar !== null && bar.children.length > 0) { // TODO: just look for .seg-fill
+                        bar.children[bar.children.length - 1].style.width = (data[key] / ranges[key].max) * 100 + "%";
                     }
                 });
-            }
+            };
+
+            function user_configuration(config) {
+                ranges = config.ranges;
+                Object.keys(config.units).forEach(key => {
+                    var field = document.getElementById("units-" + key);
+                    if(field !== null) {
+                        field.innerHTML = config.units[key];
+                    }
+                });
+            };
 
             var fullscreen = true;
             function switchFullScreen() {

@@ -1,0 +1,13 @@
+{
+    "units": {
+        "vss": "mph"
+    },
+
+    "ranges": {
+        "rpm": {
+            "warning": 7000,
+            "danger": 7500,
+            "max": 8500
+        }
+    }
+}
