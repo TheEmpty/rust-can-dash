@@ -76,8 +76,8 @@ fn update_loop(source: &WebView<CanData>) {
         {
             let result = handle.dispatch(move |view| {
                 // Mock data for PoC
-                let rand_rpm: u32 = rand::thread_rng().gen_range(0, 50) + 1100;
-                let rpm_string = format!("{}", rand_rpm);
+                let rpm = rand::thread_rng().gen_range(0, 1000) + 6750;
+                let rpm_string = format!("{}", rpm);
                 let user_data = &mut *view.user_data_mut();
                 user_data.insert("rpm", rpm_string);
                 user_data.insert("vss", "10".to_string());

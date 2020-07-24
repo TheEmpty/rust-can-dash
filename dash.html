@@ -65,6 +65,8 @@
                 width: 100%;
                 color: white;
                 font-size: 4.5vh;
+                -webkit-text-stroke-width: 1px;
+                -webkit-text-stroke-color: black;
             }
             .seg-fill {
                 content:'\A';
@@ -88,6 +90,15 @@
                     var bar = document.getElementById(key + "-bar");
                     if(bar !== null && bar.children.length > 0) { // TODO: just look for .seg-fill
                         bar.children[bar.children.length - 1].style.width = (data[key] / ranges[key].max) * 100 + "%";
+                        if(ranges[key] !== null) {
+                            var this_range = ranges[key];
+                            bar.className = bar.className.replace(" seg-bar-red", "").replace(" seg-bar-yellow", "");
+                            if(data[key] >= this_range["danger"]) {
+                                bar.className += " seg-bar-red";
+                            } else if(data[key] >= this_range["warning"]) {
+                                bar.className += " seg-bar-yellow";
+                            }
+                        }
                     }
                 });
             };
