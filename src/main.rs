@@ -1,4 +1,3 @@
-// TODO: unwraps should be protected.
 // TODO: odmeter save on exit
 // TODO: support multiple dashes
 // TODO: support external buttons/triggers
@@ -18,7 +17,6 @@ use psuedo_provider::PsuedoProvider;
 extern crate log;
 extern crate simple_logger;
 
-use std::collections::HashMap;
 use std::thread;
 use std::time::Duration;
 use std::time::SystemTime;
@@ -77,8 +75,7 @@ fn inject_dash_configuration(source: &WebView<()>) {
         thread::sleep(Duration::from_millis(500));
         handle.dispatch(move |view| {
             debug!("Updating dash_configuration({})", dash_configuration);
-            view.eval(&format!("dash_configuration({})", dash_configuration));
-            Ok(())
+            view.eval(&format!("dash_configuration({})", dash_configuration))
         })
     });
 }
@@ -103,9 +100,9 @@ fn update_loop(source: &WebView<()>) {
     let handle = source.handle();
     unsafe {
         ODOMETER.odometer = std::fs::read_to_string("odometer.txt")
-            .unwrap()
+            .expect("Failed to find odometer.txt")
             .parse()
-            .unwrap();
+            .expect("Failed to convert odometer.txt to f64");
 
         LAST_UPDATE_RUN = SystemTime::now();
     }

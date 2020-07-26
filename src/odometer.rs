@@ -4,7 +4,7 @@ use std::time::SystemTime;
 
 #[derive(Copy, Clone)]
 pub struct Odometer {
-    pub odometer: f64, // TODO: only pub help init in main.rs
+    pub odometer: f64,         // TODO: only pub help init in main.rs
     pub last_save: SystemTime, // TODO: above
 }
 
@@ -12,9 +12,9 @@ impl Odometer {
     pub fn new() -> Self {
         Odometer {
             odometer: std::fs::read_to_string("odometer.txt")
-                .unwrap()
+                .expect("Failed to find odometer.txt")
                 .parse()
-                .unwrap(),
+                .expect("Failed to convert odometer.txt to f64"),
             last_save: SystemTime::now(),
         }
     }
@@ -38,8 +38,12 @@ impl Odometer {
 
     pub fn save(&mut self) {
         self.last_save = SystemTime::now();
-        let mut file = std::fs::File::create("odometer.txt").unwrap();
-        file.write_all(format!("{}", self.odometer).as_bytes());
+        let mut file =
+            std::fs::File::create("odometer.txt").expect("Failed to open odometer.txt for writing");
+        let result = file.write_all(format!("{}", self.odometer).as_bytes());
+        if result.is_err() {
+            error!("Failed to write to odometer.txt {:?}", result);
+        }
     }
 }
 

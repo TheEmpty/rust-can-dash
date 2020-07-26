@@ -1,7 +1,6 @@
 use crate::dash_data_provider::{DashData, DashDataProvider};
 
 use rand::Rng;
-use std::collections::HashMap;
 use std::thread;
 use std::time::Duration;
 
