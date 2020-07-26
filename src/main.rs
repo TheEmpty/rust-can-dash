@@ -1,4 +1,3 @@
-// TODO: odmeter save on exit
 // TODO: support multiple dashes
 // TODO: support external buttons/triggers
 
@@ -12,6 +11,7 @@ mod psuedo_provider;
 use dash_data_provider::{DashData, DashDataProvider};
 use odometer::Odometer;
 use psuedo_provider::PsuedoProvider;
+use signal_hook::{iterator::Signals, SIGINT, SIGABRT, SIGTERM, SIGHUP, SIGQUIT};
 
 #[macro_use]
 extern crate log;
@@ -98,6 +98,8 @@ static mut ODOMETER: Odometer = Odometer {
 
 fn update_loop(source: &WebView<()>) {
     let handle = source.handle();
+    let signals = Signals::new(&[SIGINT, SIGABRT, SIGTERM, SIGHUP, SIGQUIT]).expect("Failed to create signal object");
+
     unsafe {
         ODOMETER.odometer = std::fs::read_to_string("odometer.txt")
             .expect("Failed to find odometer.txt")
@@ -110,7 +112,7 @@ fn update_loop(source: &WebView<()>) {
     thread::spawn(move || {
         let provider: &mut dyn DashDataProvider = &mut PsuedoProvider {};
 
-        loop {
+        'updates: loop {
             let mut dash_data = provider.dash_data();
 
             let result = handle.dispatch(move |view| {
@@ -137,6 +139,22 @@ fn update_loop(source: &WebView<()>) {
 
             if result.is_err() {
                 error!("Failed to dispatch, {:?}", result.unwrap_err());
+            }
+
+            for _signal in signals.pending() {
+                debug!("Recieved quiting signal.");
+                unsafe {
+                    ODOMETER.save();
+                    let result = handle.dispatch(|view| {
+                        view.exit();
+                        Ok(())
+                    });
+
+                    if result.is_err() {
+                        panic!("Failed to terminate web view");
+                    }
+                }
+                break 'updates;
             }
         }
     });

@@ -46,20 +46,3 @@ impl Odometer {
         }
     }
 }
-
-pub struct DropableOdometer {
-    pub inner: Odometer,
-}
-
-impl DropableOdometer {
-    pub fn keep(&mut self) -> Result<(), ()> {
-        Ok(())
-    }
-}
-
-impl Drop for DropableOdometer {
-    fn drop(&mut self) {
-        debug!("DropableOdometer, dropped.");
-        self.inner.save();
-    }
-}

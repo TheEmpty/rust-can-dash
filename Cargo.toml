@@ -7,7 +7,8 @@ edition = "2018"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-web-view = "0.5.4"
-rand = "0.7.3" # PoC
+web-view = "0.6.3"
+rand = "0.7.3"
 log = "0.4"
 simple_logger = "1.6.0"
+signal-hook = "0.1.16"
