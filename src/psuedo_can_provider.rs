@@ -11,11 +11,11 @@ impl CanProvider for PsuedoCanProvider {
     fn can_data(&mut self) -> CanData {
         let rpm = rand::thread_rng().gen_range(0, 600) + 4500;
         let rpm_string = format!("{}", rpm);
-    
+
         let gear = 2;
         let gear_string = format!("{}", gear);
-    
-        let vss1: i32 = ((1.888 * 4.3 * rpm as f64)/4000_f64).round() as i32;
+
+        let vss1: i32 = ((1.888 * 4.3 * rpm as f64) / 4000_f64).round() as i32;
         let vss1_string = format!("{}", vss1);
 
         let mut can_data: CanData = HashMap::new();

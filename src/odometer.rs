@@ -1,6 +1,6 @@
-use std::time::SystemTime;
-use std::time::Duration;
 use std::io::prelude::*;
+use std::time::Duration;
+use std::time::SystemTime;
 
 #[derive(Copy, Clone)]
 pub struct Odometer {
@@ -11,19 +11,27 @@ pub struct Odometer {
 impl Odometer {
     pub fn new() -> Self {
         Odometer {
-            odometer: std::fs::read_to_string("odometer.txt").unwrap().parse().unwrap(),
-            last_save: SystemTime::now()
+            odometer: std::fs::read_to_string("odometer.txt")
+                .unwrap()
+                .parse()
+                .unwrap(),
+            last_save: SystemTime::now(),
         }
     }
 
     pub fn update(&mut self, vss: f32, time: Duration) -> f64 {
-        let distance_travelled = (vss/3600000000000.0) * time.as_nanos() as f32;
+        let distance_travelled = (vss / 3600000000000.0) * time.as_nanos() as f32;
         self.odometer += distance_travelled as f64;
         self.odometer
     }
 
     pub fn auto_save(&mut self) {
-        if SystemTime::now().duration_since(self.last_save).unwrap().as_secs() >= 60 {
+        if SystemTime::now()
+            .duration_since(self.last_save)
+            .unwrap()
+            .as_secs()
+            >= 60
+        {
             self.save();
         }
     }
@@ -36,7 +44,7 @@ impl Odometer {
 }
 
 pub struct DropableOdometer {
-    pub inner: Odometer
+    pub inner: Odometer,
 }
 
 impl DropableOdometer {
