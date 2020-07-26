@@ -18,7 +18,7 @@ impl DashDataProvider for PsuedoProvider {
         let vss1: i32 = ((1.888 * 4.3 * rpm as f64) / 4000_f64).round() as i32;
         let vss1_string = format!("{}", vss1);
 
-        let mut can_data: DashData = HashMap::new();
+        let mut can_data = DashData::new();
         can_data.insert("rpm", rpm_string);
         can_data.insert("vss1", vss1_string);
         can_data.insert("gear", gear_string);

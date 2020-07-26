@@ -10,7 +10,7 @@ mod dash_data_provider;
 mod odometer;
 mod psuedo_provider;
 
-use dash_data_provider::DashDataProvider;
+use dash_data_provider::{DashData, DashDataProvider};
 use odometer::Odometer;
 use psuedo_provider::PsuedoProvider;
 
@@ -83,8 +83,8 @@ fn inject_dash_configuration(source: &WebView<()>) {
     });
 }
 
-fn update_web_view(view: &mut WebView<()>, can_data: &HashMap<&str, String>) {
-    let java_script = format!("update({:?})", can_data);
+fn update_web_view(view: &mut WebView<()>, can_data: &DashData) {
+    let java_script = format!("update({})", can_data.as_json());
     let update_cycle = view.eval(&java_script);
     if update_cycle.is_err() {
         let error = update_cycle.unwrap_err();
