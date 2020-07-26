@@ -4,8 +4,8 @@ use std::time::SystemTime;
 
 #[derive(Copy, Clone)]
 pub struct Odometer {
-    odometer: f64,
-    last_save: SystemTime,
+    pub odometer: f64, // TODO: only pub help init in main.rs
+    pub last_save: SystemTime, // TODO: above
 }
 
 impl Odometer {
@@ -20,7 +20,7 @@ impl Odometer {
     }
 
     pub fn update(&mut self, vss: f32, time: Duration) -> f64 {
-        let distance_travelled = (vss / 3600000000000.0) * time.as_nanos() as f32;
+        let distance_travelled = (vss / 3600000000000_f32) * time.as_nanos() as f32;
         self.odometer += distance_travelled as f64;
         self.odometer
     }

@@ -93,16 +93,25 @@ fn update_web_view(view: &mut WebView<()>, can_data: &DashData) {
 }
 
 static mut LAST_UPDATE_RUN: SystemTime = SystemTime::UNIX_EPOCH;
+
+static mut ODOMETER: Odometer = Odometer {
+    odometer: 0_f64,
+    last_save: SystemTime::UNIX_EPOCH,
+};
+
 fn update_loop(source: &WebView<()>) {
     let handle = source.handle();
-    let mut odometer = Odometer::new();
-
     unsafe {
+        ODOMETER.odometer = std::fs::read_to_string("odometer.txt")
+            .unwrap()
+            .parse()
+            .unwrap();
+
         LAST_UPDATE_RUN = SystemTime::now();
     }
+
     thread::spawn(move || {
         let provider: &mut dyn DashDataProvider = &mut PsuedoProvider {};
-        odometer.auto_save();
 
         loop {
             let mut dash_data = provider.dash_data();
@@ -116,10 +125,14 @@ fn update_loop(source: &WebView<()>) {
                     LAST_UPDATE_RUN = SystemTime::now();
                 }
 
-                let odometer_reading = odometer.update(
-                    dash_data.get("vss1").unwrap().parse().unwrap(),
-                    time_since_last_run,
-                );
+                let odometer_reading: f64;
+                unsafe {
+                    odometer_reading = ODOMETER.update(
+                        dash_data.get("vss1").unwrap().parse().unwrap(),
+                        time_since_last_run,
+                    );
+                    ODOMETER.auto_save();
+                }
                 dash_data.insert("odometer", odometer_reading.to_string());
                 update_web_view(view, &dash_data);
                 Ok(())
