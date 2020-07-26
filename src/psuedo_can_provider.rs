@@ -1,4 +1,4 @@
-use crate::CanProvider::{CanData, CanProvider};
+use crate::can_provider::{CanData, CanProvider};
 
 use rand::Rng;
 use std::collections::HashMap;
@@ -15,7 +15,7 @@ impl CanProvider for PsuedoCanProvider {
         let gear = 2;
         let gear_string = format!("{}", gear);
     
-        let vss1: i32 = ((1.888 * 4.3 * rpm as f64)/4000 as f64).round() as i32;
+        let vss1: i32 = ((1.888 * 4.3 * rpm as f64)/4000_f64).round() as i32;
         let vss1_string = format!("{}", vss1);
 
         let mut can_data: CanData = HashMap::new();
