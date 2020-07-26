@@ -22,7 +22,6 @@ use std::collections::HashMap;
 use std::thread;
 use std::time::Duration;
 use web_view::*;
-
 use std::time::SystemTime;
 
 fn main() {
@@ -36,7 +35,7 @@ fn main() {
 
     // TODO: provider should be create here, and based on config
     update_loop(&view);
-    inject_user_configuration(&view);
+    inject_dash_configuration(&view);
 
     let run = view.run();
     if run.is_err() {
@@ -66,19 +65,19 @@ fn build_web_view(html: String) -> WebView<'static, ()> {
     view
 }
 
-fn inject_user_configuration(source: &WebView<()>) {
-    let user_configuration: String = std::fs::read_to_string("user_configuration.json")
-        .expect("Failed to read user_configuration.json")
+fn inject_dash_configuration(source: &WebView<()>) {
+    let dash_configuration: String = std::fs::read_to_string("dash_configuration.json")
+        .expect("Failed to read dash_configuration.json")
         .parse::<String>()
-        .expect("Failed to convert user_configuration.json to a string")
+        .expect("Failed to convert dash_configuration.json to a string")
         .replace("\n", "");
     let handle = source.handle();
     // TODO: can't call before 'run'. But having a hard time doing that and keeping rustc happy.
     thread::spawn(move || {
         thread::sleep(Duration::from_millis(500));
         handle.dispatch(move |view| {
-            debug!("Updating user_configuration({})", user_configuration);
-            view.eval(&format!("user_configuration({})", user_configuration));
+            debug!("Updating dash_configuration({})", dash_configuration);
+            view.eval(&format!("dash_configuration({})", dash_configuration));
             Ok(())
         })
     });
