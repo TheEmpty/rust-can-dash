@@ -124,49 +124,77 @@
         </style>
         <script type="text/javascript">
             var ranges;
+            var proxies;
+
+            function update_field(key, value) {
+                var field = document.getElementById(key);
+                if(field !== null) {
+                    if(field.nodeName == "LABEL") {
+                        field.setAttribute("data-value", value);
+                    } else {
+                        field.innerHTML = value;
+                    }
+                } 
+            }
+
+            function update_seg_bar(key, value) {
+                var bar = document.getElementById(key + "-bar");
+                 // TODO: just look for .seg-fill instead of grabbing last element
+                var has_bar = bar !== null && bar.children.length > 0;
+                let has_range = ranges[key] !== undefined;
+                if(has_bar && has_range) {
+                    bar.children[bar.children.length - 1].style.width = (value / ranges[key].max) * 100 + "%";
+                    if(ranges[key] !== null) {
+                        var this_range = ranges[key];
+                        if(value >= this_range["danger"]) {
+                            if(bar.className.indexOf("seg-bar-red") == -1) {
+                                bar.className = bar.className.replace(" seg-bar-yellow", "");
+                                bar.className += " seg-bar-red blinking";
+                            }
+                        } else if(value >= this_range["warning"]) {
+                            if(bar.className.indexOf("seg-bar-yellow") == -1) {
+                                bar.className = bar.className.replace(" seg-bar-red blinking", "");
+                                bar.className += " seg-bar-yellow";
+                            }
+                        } else {
+                            bar.className = bar.className.replace(" seg-bar-red blinking", "").replace(" seg-bar-yellow", "");
+                        }
+                    }
+                }
+            }
 
             function update(data) {
                 Object.keys(data).forEach(key => {
-                    var field = document.getElementById(key);
-                    if(field !== null) {
-                        if(field.nodeName == "LABEL") {
-                            field.setAttribute("data-value", data[key]);
-                        } else {
-                            field.innerHTML = data[key];
-                        }
+                    var name = key;
+                    if(proxies[key] != undefined) {
+                        name = proxies[key]
                     }
 
-                    var bar = document.getElementById(key + "-bar");
-                    if(bar !== null && bar.children.length > 0) { // TODO: just look for .seg-fill
-                        bar.children[bar.children.length - 1].style.width = (data[key] / ranges[key].max) * 100 + "%";
-                        if(ranges[key] !== null) {
-                            var this_range = ranges[key];
-                            if(data[key] >= this_range["danger"]) {
-                                if(bar.className.indexOf("seg-bar-red") == -1) {
-                                    bar.className = bar.className.replace(" seg-bar-yellow", "");
-                                    bar.className += " seg-bar-red blinking";
-                                }
-                            } else if(data[key] >= this_range["warning"]) {
-                                if(bar.className.indexOf("seg-bar-yellow") == -1) {
-                                    bar.className = bar.className.replace(" seg-bar-red blinking", "");
-                                    bar.className += " seg-bar-yellow";
-                                }
-                            } else {
-                                bar.className = bar.className.replace(" seg-bar-red blinking", "").replace(" seg-bar-yellow", "");
-                            }
-                        }
-                    }
+                    update_field(name, data[key]);
+                    update_seg_bar(name, data[key])
                 });
             };
 
-            function user_configuration(config) {
-                ranges = config.ranges;
-                Object.keys(config.units).forEach(key => {
+            function set_units(units) {
+                Object.keys(units).forEach(key => {
                     var field = document.getElementById("units-" + key);
                     if(field !== null) {
-                        field.innerHTML = config.units[key];
+                        field.innerHTML = units[key];
                     }
-                });
+                }); 
+            }
+
+            function user_configuration(config) {
+                ranges = config.ranges;
+                proxies = config.proxies;
+                set_units(config.units);
+
+                if(ranges == undefined) {
+                    ranges = {};
+                }
+                if(proxies == undefined) {
+                    proxies = {};
+                }
             };
 
             var fullscreen = true;
