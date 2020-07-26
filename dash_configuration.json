@@ -1,6 +1,7 @@
 {
     "units": {
-        "vss1": "mph"
+        "vss1": "mph",
+        "oil_pressure": "psi"
     },
 
     "proxies": {
