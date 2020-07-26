@@ -33,7 +33,7 @@ fn main() {
         .expect("Unable to convert dash.html to a string");
     let view = build_web_view(html);
 
-    // TODO: provider should be create here, and based on config
+    // TODO: provider should be create here, and based on ecu_configuration.json
     update_loop(&view);
     inject_dash_configuration(&view);
 
