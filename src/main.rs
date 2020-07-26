@@ -6,13 +6,13 @@
 extern crate rand;
 extern crate web_view;
 
-mod can_provider;
+mod dash_data_provider;
 mod odometer;
-mod psuedo_can_provider;
+mod psuedo_provider;
 
-use can_provider::CanProvider;
+use dash_data_provider::DashDataProvider;
 use odometer::Odometer;
-use psuedo_can_provider::PsuedoCanProvider;
+use psuedo_provider::PsuedoProvider;
 
 #[macro_use]
 extern crate log;
@@ -21,8 +21,8 @@ extern crate simple_logger;
 use std::collections::HashMap;
 use std::thread;
 use std::time::Duration;
-use web_view::*;
 use std::time::SystemTime;
+use web_view::*;
 
 fn main() {
     simple_logger::init().expect("Failed to setup logger");
@@ -101,11 +101,11 @@ fn update_loop(source: &WebView<()>) {
         LAST_UPDATE_RUN = SystemTime::now();
     }
     thread::spawn(move || {
-        let provider: &mut dyn CanProvider = &mut PsuedoCanProvider {};
+        let provider: &mut dyn DashDataProvider = &mut PsuedoProvider {};
         odometer.auto_save();
 
         loop {
-            let mut can_data = provider.can_data();
+            let mut dash_data = provider.dash_data();
 
             let result = handle.dispatch(move |view| {
                 let time_since_last_run: Duration;
@@ -117,11 +117,11 @@ fn update_loop(source: &WebView<()>) {
                 }
 
                 let odometer_reading = odometer.update(
-                    can_data.get("vss1").unwrap().parse().unwrap(),
+                    dash_data.get("vss1").unwrap().parse().unwrap(),
                     time_since_last_run,
                 );
-                can_data.insert("odometer", odometer_reading.to_string());
-                update_web_view(view, &can_data);
+                dash_data.insert("odometer", odometer_reading.to_string());
+                update_web_view(view, &dash_data);
                 Ok(())
             });
 

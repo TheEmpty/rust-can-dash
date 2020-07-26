@@ -1,5 +1,5 @@
 [package]
-name = "rust-can-dash"
+name = "rust-dash"
 version = "0.1.0"
 authors = ["Myles Empty Best <myles@empty.best>"]
 edition = "2018"

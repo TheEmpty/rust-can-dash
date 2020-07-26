@@ -1,14 +1,14 @@
-use crate::can_provider::{CanData, CanProvider};
+use crate::dash_data_provider::{DashData, DashDataProvider};
 
 use rand::Rng;
 use std::collections::HashMap;
 use std::thread;
 use std::time::Duration;
 
-pub struct PsuedoCanProvider {}
+pub struct PsuedoProvider {}
 
-impl CanProvider for PsuedoCanProvider {
-    fn can_data(&mut self) -> CanData {
+impl DashDataProvider for PsuedoProvider {
+    fn dash_data(&mut self) -> DashData {
         let rpm = rand::thread_rng().gen_range(0, 600) + 4500;
         let rpm_string = format!("{}", rpm);
 
@@ -18,7 +18,7 @@ impl CanProvider for PsuedoCanProvider {
         let vss1: i32 = ((1.888 * 4.3 * rpm as f64) / 4000_f64).round() as i32;
         let vss1_string = format!("{}", vss1);
 
-        let mut can_data: CanData = HashMap::new();
+        let mut can_data: DashData = HashMap::new();
         can_data.insert("rpm", rpm_string);
         can_data.insert("vss1", vss1_string);
         can_data.insert("gear", gear_string);

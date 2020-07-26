@@ -177,7 +177,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "rust-can-dash"
+name = "rust-dash"
 version = "0.1.0"
 dependencies = [
  "log",
