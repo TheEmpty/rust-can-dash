@@ -17,7 +17,7 @@
         },
         "fuel": {
             "max": 100,
-            "min_warning": 10,
+            "min_warning": 15,
             "min_danger": 5
         }
     }

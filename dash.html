@@ -15,7 +15,7 @@
         <div id="fuel-gauge"></div>
         <div id="fuel-label">FUEL</div>
         <div><label id="launch" data-value="false">SEND IT</label></div>
-        <div><label id="pit-lane-limitter" data-value="false">Pit</label></div>
+        <div><label id="pit-limiter" data-value="false">Pit</label></div>
 
         <!-- working on -->
         <div>IAT: <span id="iat"></span></div>
@@ -153,7 +153,7 @@
                 
             }
 
-            #pit-lane-limitter {
+            #pit-limiter {
                 position: absolute;
                 top: 0;
                 margin-left: auto;
@@ -165,18 +165,14 @@
                 z-index: 909;
             }
 
-            #pit-lane-limitter[data-value="false"] {
+            #pit-limiter[data-value="false"] {
                 background-color: grey;
                 display: none;
             }
 
-            #pit-lane-limitter[data-value="true"] {
+            #pit-limiter[data-value="true"] {
                 background-color: #81D8D0;
                 animation: blinker .5s step-start infinite;
-            }
-
-            .test {
-                background: linear-gradient(165deg, #00a8ff 0%, #cc00ff 100%);
             }
 
             #fuel-label {
