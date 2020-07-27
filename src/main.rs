@@ -43,7 +43,7 @@ fn main() {
 
 fn build_web_view(html: String) -> WebView<'static, ()> {
     let mut view = web_view::builder()
-        .title("Rust Can Dash")
+        .title("Rust Dash")
         .content(Content::Html(html))
         .size(800, 100)
         .resizable(true)
@@ -80,8 +80,8 @@ fn inject_dash_configuration(source: &WebView<()>) {
     });
 }
 
-fn update_web_view(view: &mut WebView<()>, can_data: &DashData) {
-    let java_script = format!("update({})", can_data.as_json());
+fn update_web_view(view: &mut WebView<()>, dash_data: &DashData) {
+    let java_script = format!("update({})", dash_data.as_json());
     let update_cycle = view.eval(&java_script);
     if update_cycle.is_err() {
         let error = update_cycle.unwrap_err();
