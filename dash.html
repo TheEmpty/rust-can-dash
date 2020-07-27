@@ -1,31 +1,29 @@
 <!doctype html>
 <html>
     <body>
-        <div id="rpm-bar" class="seg-bar seg-bar-white valign">
+        <div id="rpm-bar" class="seg-bar valign">
             <span id="rpm">0</span>
             <span class="seg-fill"></span>
         </div>
 
-        <!--
         <div id="vss_radial">
-            <div>
-                <h1 id="vss1" data-decimal-places="0">0</h1>
-                <span id="units-vss1">mph</span><br />
-            </div>
+            <div id="vss1" data-decimal-places="0">0</div>
+            <span id="units-vss1">mph</span><br>
+            <span id="gear">1</span>
         </div>
-        -->
+
         <div id="fuel-gauge"></div>
         <div id="fuel-label">FUEL</div>
         <div><label id="launch" data-value="false">SEND IT</label></div>
         <div><label id="pit-lane-limitter" data-value="false">Pit</label></div>
 
-        <div class="valign halign">
-            <div>Odometer: <span id="odometer" data-decimal-places="2"></span></div>
-            <h3>Gear: <span id="gear">1</span></h3>
-            <div>Oil Pressure: <span id="oil_pressure">&nbsp;</span></div>
-            <div>Coolant: <span id="clt">&nbsp;</span></div>
-            <div>MAP: <span id="map">&nbsp;</span></div>
-        </div>
+        <!-- working on -->
+        <div>IAT: <span id="iat"></span></div>
+        <div>Odometer: <span id="odometer" data-decimal-places="2"></span></div>
+        <div>Oil Pressure: <span id="oil_pressure">&nbsp;</span></div>
+        <div>Coolant: <span id="clt">&nbsp;</span></div>
+        <div>MAP: <span id="map">&nbsp;</span></div>
+        <div>Time: <span id="time"></span></div>
 
         <style>
             body {
@@ -36,6 +34,8 @@
             #vss1 {
                 font-size: 30vh;
                 margin: -4vh;
+                position: relative;
+                top: 15vh;
             }
 
             #vss_radial {
@@ -45,10 +45,21 @@
                 border-radius: 100%;
                 border: 2px solid white;
                 color: white;
+                text-align: center;
+                margin: auto;
+                margin-top: 5vh;
             }
 
             #units-vss1 {
-                font-size: 6vh;
+                font-size: 4vh;
+                position: relative;
+                top: 11vh;
+            }
+
+            #gear {
+                font-size: 9vh;
+                position: relative;
+                top: 18vh;
             }
 
             #rpm {
@@ -66,11 +77,11 @@
                 transform: translate(-50%, -50%)
             }
             
-            .seg-bar-white {
-                border: 1px solid white;
+            .seg-bar{
+                border: 1px solid #81D8D0;
             }
-            .seg-bar-white > .seg-fill {
-                background: white;
+            .seg-bar > .seg-fill {
+                background: #81D8D0;
             }
 
             .seg-bar-yellow {
@@ -91,7 +102,7 @@
                 height:6vh;
                 position:relative;
                 width: 100%;
-                color: green; /* TODO: for readability */
+                color: white;
                 font-size: 4.5vh;
             }
 
@@ -282,6 +293,9 @@
             }
 
             function update(data) {
+                var now = new Date();
+                // TODO: make 12/24 a dash_configuration feature
+                data["time"] = (now.getHours() % 12) + ":" + now.getMinutes() + (now.getHours() >= 12 ? " PM" : " AM");
                 Object.keys(data).forEach(key => {
                     var name = key;
                     if(proxies[key] != undefined) {
