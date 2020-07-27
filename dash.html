@@ -1,6 +1,6 @@
 <!doctype html>
 <html>
-    <body ondblclick="switchFullScreen()">
+    <body>
         <div id="rpm-bar" class="seg-bar seg-bar-white valign">
             <span id="rpm">0</span>
             <small>rpm</small>
@@ -213,6 +213,19 @@
                 }
                 fullscreen = !fullscreen;
             }
+
+            var doubleClickTimer = null;
+            document.getRootNode().addEventListener("click", function() {
+                if(doubleClickTimer != null) {
+                    clearTimeout(doubleClickTimer);
+                    doubleClickTimer = null;
+                    switchFullScreen();
+                } else {
+                    doubleClickTimer = setTimeout(function() {
+                        doubleClickTimer = null;
+                    }, 1000);
+                }
+            });
         </script>
     </body>
 </html>
