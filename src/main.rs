@@ -45,7 +45,7 @@ fn build_web_view(html: String) -> WebView<'static, ()> {
     let mut view = web_view::builder()
         .title("Rust Dash")
         .content(Content::Html(html))
-        .size(800, 100)
+        .size(800, 480)
         .resizable(true)
         .debug(true)
         .user_data(())
